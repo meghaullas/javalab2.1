@@ -1,0 +1,50 @@
+import java.util.*;
+
+public class FrequentNumbers {
+
+    // Static variable to store the input array of N numbers
+    static int[] arr;
+
+    // Static method to find the top K numbers with the maximum frequency
+    public static void findFrequentNumbers(int K) {
+        // Step 1: Create a HashMap to store frequencies of each number
+        Map<Integer, Integer> frequencyMap = new HashMap<>();
+        for (int num : arr) {
+            frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+        }
+
+        // Step 2: Create a PriorityQueue (Min-Heap) to sort by frequency and number value
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
+            if (a[1] == b[1]) {
+                return Integer.compare(a[0], b[0]); // If frequencies are the same, sort by number value
+            }
+            return Integer.compare(b[1], a[1]); // Sort by frequency in descending order
+        });
+
+        // Step 3: Add each number and its frequency to the PriorityQueue
+        for (Map.Entry<Integer, Integer> entry : frequencyMap.entrySet()) {
+            pq.offer(new int[]{entry.getKey(), entry.getValue()});
+        }
+
+        // Step 4: Extract top K numbers based on frequency and number value
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < K; i++) {
+            result.add(pq.poll()[0]);
+        }
+
+        // Step 5: Print the result in descending order
+        System.out.println(result);
+    }
+
+    public static void main(String[] args) {
+        // Test case 1
+        arr = new int[]{3, 1, 4, 4, 5, 2, 6, 1};
+        System.out.print("Test case 1 result: ");
+        findFrequentNumbers(2); // Output: [4, 1]
+
+        // Test case 2
+        arr = new int[]{7, 10, 11, 5, 2, 5, 5, 7, 11, 8, 9};
+        System.out.print("Test case 2 result: ");
+        findFrequentNumbers(4); // Output: [5, 11, 7, 10]
+    }
+}
